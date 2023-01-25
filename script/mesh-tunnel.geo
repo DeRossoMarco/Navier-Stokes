@@ -10,7 +10,7 @@ y = 0.2;
 x = 0.5;
 
 // Mesh size
-N = 32;
+N = 16;
 h = 1.0 / N;
 
 // Outer points
@@ -52,5 +52,5 @@ Physical Volume(0) = {1};
 
 // Saving mesh to file
 strN = Sprintf("%.0f", N);
-Mesh 3;
-Save StrCat("../mesh/mesh-step-", strN, ".msh");
+ Mesh 3;
+ Save StrCat("../mesh/mesh-step-", strN, ".msh");
