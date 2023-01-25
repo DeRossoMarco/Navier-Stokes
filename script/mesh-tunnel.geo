@@ -53,4 +53,4 @@ Physical Volume(0) = {1};
 // Saving mesh to file
 strN = Sprintf("%.0f", N);
  Mesh 3;
- Save StrCat("../mesh/mesh-step-", strN, ".msh");
+ Save StrCat("../mesh/mesh-tunnel-step-", strN, ".msh");

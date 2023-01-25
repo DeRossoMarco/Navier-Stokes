@@ -302,7 +302,7 @@ class NavierStokes {
     TrilinosWrappers::BlockSparseMatrix pressure_mass;
 
     // System solution at previous time step.
-    TrilinosWrappers::MPI::Vector solution_old;
+    TrilinosWrappers::MPI::BlockVector solution_old;
 
     // System solution (without ghost elements).
     TrilinosWrappers::MPI::BlockVector solution_owned;
@@ -311,10 +311,10 @@ class NavierStokes {
     TrilinosWrappers::MPI::BlockVector solution;
 
     // Increment of the solution between Newton iterations.
-    TrilinosWrappers::MPI::Vector delta_owned;
+    TrilinosWrappers::MPI::BlockVector delta_owned;
 
     // Residual vector.
-    TrilinosWrappers::MPI::Vector residual_vector;
+    TrilinosWrappers::MPI::BlockVector residual_vector;
 };
 
 #endif
