@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.12.0)
-project(Navier-Stokes LANGUAGES CXX C)
+project(NavierStokes LANGUAGES CXX C)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED "ON")
@@ -32,5 +32,5 @@ deal_ii_initialize_cached_variables()
 # Add useful compiler flags.
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wfloat-conversion -Wmissing-braces -Wnon-virtual-dtor")
 
-add_executable(Navier-Stokes src/main.cpp src/Navier-Stokes.cpp)
-deal_ii_setup_target(Navier-Stokes)
+add_executable(NavierStokes src/main.cpp src/NavierStokes.cpp)
+deal_ii_setup_target(NavierStokes)

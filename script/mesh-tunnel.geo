@@ -10,7 +10,7 @@ y = 0.2;
 x = 0.5;
 
 // Mesh size
-N = 16;
+N = 8;
 h = 1.0 / N;
 
 // Outer points
@@ -37,14 +37,17 @@ Plane Surface(0) = {0, 1};
 Extrude {0, 0, H} { Surface{0}; }
 
 
-// Wall surface
-Physical Surface(0) = {0, 1, 3, 6, 5};
-
 // Inlet surface
-Physical Surface(1) = {4};
+Physical Surface(0) = {4};
+
+// Wall surface
+Physical Surface(1) = {0, 1, 3, 6};
+
+// Cylinder surface
+Physical Surface(2) = {5};
 
 // Outlet surface
-Physical Surface(2) = {2};
+Physical Surface(3) = {2};
 
 // Physical volume
 Physical Volume(0) = {1};
@@ -52,5 +55,5 @@ Physical Volume(0) = {1};
 
 // Saving mesh to file
 strN = Sprintf("%.0f", N);
- Mesh 3;
- Save StrCat("../mesh/mesh-tunnel-step-", strN, ".msh");
+Mesh 3;
+Save StrCat("../mesh/mesh-tunnel-step-", strN, ".msh");
