@@ -10,48 +10,46 @@ y = 0.2;
 x = 0.5;
 
 // Mesh size
-N = 8;
+N = 16.0;
 h = 1.0 / N;
 
-// Outer points
-Point(0) = {0, 0, 0, h};
-Point(1) = {L, 0, 0, h};
-Point(2) = {L, H, 0, h};
-Point(3) = {0, H, 0, h};
+// Outer point
+Point(1) = {0, 0, 0, h};
+Point(2) = {L, 0, 0, h};
+Point(3) = {L, H, 0, h};
+Point(4) = {0, H, 0, h};
 
 // Outer lines
-Line(0) = {0, 1};
 Line(1) = {1, 2};
 Line(2) = {2, 3};
-Line(3) = {3, 0};
-Curve Loop(0) = {0, 1, 2, 3};
+Line(3) = {3, 4};
+Line(4) = {4, 1};
 
-// Circle line
-Circle(4) = {x, y, 0, r, 0, 2*Pi};
-MeshSize {4} = h / 4;
-Curve Loop(1) = {4};
+// Circle
+Circle(5) = {x, y, 0, r, 0, 2*Pi};
+MeshSize {5} = h / 4.0;
 
-Plane Surface(0) = {0, 1};
+// Side surface
+Curve Loop(1) = {3, 4, 1, 2};
+Curve Loop(2) = {5};
+Plane Surface(1) = {1, 2};
 
-// Generate volume
-Extrude {0, 0, H} { Surface{0}; }
-
+// Extrude volume
+Extrude {0, 0, H / 2.0} {
+  Surface{1}; 
+}
 
 // Inlet surface
-Physical Surface(0) = {4};
-
+Physical Surface(1) = {3};
 // Wall surface
-Physical Surface(1) = {0, 1, 3, 6};
-
+Physical Surface(2) = {1, 7, 4, 2};
 // Cylinder surface
-Physical Surface(2) = {5};
-
+Physical Surface(3) = {6};
 // Outlet surface
-Physical Surface(3) = {2};
+Physical Surface(4) = {5};
 
-// Physical volume
-Physical Volume(0) = {1};
-
+// Physical domain
+Physical Volume(1) = {1};
 
 // Saving mesh to file
 strN = Sprintf("%.0f", N);
