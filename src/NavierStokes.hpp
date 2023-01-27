@@ -43,15 +43,14 @@ class NavierStokes {
         public:
         virtual void
         vector_value(const Point<dim> & /*p*/,Vector<double> &values) const override {
-            for (unsigned int i = 0; i < dim - 1; ++i)
-                values[i] = 0.0;
-
-            values[dim - 1] = -g;
+            values[0] = 0;
+            values[1] = -g;
+            values[2] = 0;
         }
 
         virtual double
         value(const Point<dim> & /*p*/,const unsigned int component = 0) const override {
-            if (component == dim - 1)
+            if (component == 1)
                 return -g;
             else
                 return 0.0;
@@ -66,23 +65,23 @@ class NavierStokes {
         InletVelocity() : Function<dim>(dim + 1) {}
 
         virtual void
-        vector_value(const Point<dim> &p, Vector<double> &values) const override {
-            values[0] = -alpha * p[1] * (2.0 - p[1]) * (1.0 - p[2]) * (2.0 - p[2]);
+        vector_value(const Point<dim> & /*p*/, Vector<double> &values) const override {
+            values[0] = in_velocity;
 
             for (unsigned int i = 1; i < dim + 1; ++i)
                 values[i] = 0.0;
         }
 
         virtual double
-        value(const Point<dim> &p, const unsigned int component = 0) const override {
+        value(const Point<dim> & /*p*/, const unsigned int component = 0) const override {
             if (component == 0)
-                return -alpha * p[1] * (2.0 - p[1]) * (1.0 - p[2]) * (2.0 - p[2]);
+                return in_velocity;
             else
                 return 0.0;
         }
 
         protected:
-        const double alpha = 1.0;
+        const double in_velocity = 1.0;
     };
 
     class PreconditionIdentity {
@@ -233,7 +232,7 @@ class NavierStokes {
     const double nu = 1;
 
     // Outlet pressure [Pa].
-    const double p_out = 10;
+    const double p_out = 0;
 
     // Forcing term.
     ForcingTerm forcing_term;

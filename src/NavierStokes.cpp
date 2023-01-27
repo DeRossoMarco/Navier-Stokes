@@ -103,9 +103,9 @@ void NavierStokes::setup() {
     for (unsigned int c = 0; c < dim + 1; ++c) {
         for (unsigned int d = 0; d < dim + 1; ++d) {
             if (c == dim && d == dim) // pressure-pressure term
-              coupling[c][d] = DoFTools::always;
+                coupling[c][d] = DoFTools::always;
             else // other combinations
-              coupling[c][d] = DoFTools::none;
+                coupling[c][d] = DoFTools::none;
         }
     }
     TrilinosWrappers::BlockSparsityPattern sparsity_pressure_mass(
@@ -139,9 +139,9 @@ void NavierStokes::assemble() {
                                 update_values | update_gradients |
                                 update_quadrature_points | update_JxW_values);
     FEFaceValues<dim> fe_face_values(*fe,
-                                    *quadrature_face,
-                                    update_values | update_normal_vectors |
-                                    update_JxW_values);
+                                     *quadrature_face,
+                                     update_values | update_normal_vectors |
+                                     update_JxW_values);
 
     FullMatrix<double> cell_matrix(dofs_per_cell, dofs_per_cell);
     FullMatrix<double> cell_pressure_mass_matrix(dofs_per_cell, dofs_per_cell);
@@ -213,8 +213,8 @@ void NavierStokes::assemble() {
         if (cell->at_boundary()) {
             for (unsigned int f = 0; f < cell->n_faces(); ++f) {
                 if (cell->face(f)->at_boundary() &&
-                    cell->face(f)->boundary_id() == 3 ||
-                    cell->face(f)->boundary_id() == 1) {
+                    /*cell->face(f)->boundary_id() == 2 ||*/
+                    cell->face(f)->boundary_id() == 4) {
                     fe_face_values.reinit(cell, f);
 
                     for (unsigned int q = 0; q < n_q_face; ++q) {
@@ -246,16 +246,18 @@ void NavierStokes::assemble() {
     std::map<types::boundary_id, const Function<dim> *> boundary_functions;
 
     // Inlet Dirichlet condition
-    boundary_functions[0] = &inlet_velocity;
+    boundary_functions[1] = &inlet_velocity;
+    // Cylinder Dirichlet condition
+    Functions::ZeroFunction<dim> zero_function(dim + 1);
+    boundary_functions[3] = &zero_function;
+
     VectorTools::interpolate_boundary_values(dof_handler,
                                              boundary_functions,
                                              boundary_values,
                                              ComponentMask(
                                              {true, true, true, false}));
 
-
     boundary_functions.clear();
-    Functions::ZeroFunction<dim> zero_function(dim + 1);
     boundary_functions[2] = &zero_function;
     VectorTools::interpolate_boundary_values(dof_handler,
                                              boundary_functions,
@@ -270,7 +272,7 @@ void NavierStokes::assemble() {
 void NavierStokes::solve() {
     pcout << "===============================================" << std::endl;
 
-    SolverControl solver_control(2000, 1e-6 * system_rhs.l2_norm());
+    SolverControl solver_control(2000, 1e-4 * system_rhs.l2_norm());
 
     SolverGMRES<TrilinosWrappers::MPI::BlockVector> solver(solver_control);
 
