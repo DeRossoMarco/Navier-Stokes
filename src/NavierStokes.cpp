@@ -256,14 +256,15 @@ void NavierStokes::assemble() {
                                              boundary_values,
                                              ComponentMask(
                                              {true, true, true, false}));
-
+    
+    // Wall mixed boundary condition
     boundary_functions.clear();
     boundary_functions[2] = &zero_function;
     VectorTools::interpolate_boundary_values(dof_handler,
                                              boundary_functions,
                                              boundary_values,
                                              ComponentMask(
-                                             {true, true, true, false}));
+                                             {false, true, true, false}));
 
     MatrixTools::apply_boundary_values(
         boundary_values, system_matrix, solution, system_rhs, false);
@@ -272,7 +273,7 @@ void NavierStokes::assemble() {
 void NavierStokes::solve() {
     pcout << "===============================================" << std::endl;
 
-    SolverControl solver_control(2000, 1e-4 * system_rhs.l2_norm());
+    SolverControl solver_control(2000, 1e-6 * system_rhs.l2_norm());
 
     SolverGMRES<TrilinosWrappers::MPI::BlockVector> solver(solver_control);
 

@@ -81,7 +81,7 @@ class NavierStokes {
         }
 
         protected:
-        const double in_velocity = 1.0;
+        const double in_velocity = 10.0;
     };
 
     class PreconditionIdentity {
